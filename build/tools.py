@@ -55,7 +55,7 @@ def download_playlist(
 
 
 def get_maxquality_audio_stream_itag(yt: YouTube) -> int:
-    audio_streams = yt.streams.filter(only_audio=True)
+    audio_streams = yt.streams.filter(only_audio=True, file_extension='mp4')
 
     streams_quality_dict = {}
     for stream in audio_streams:
