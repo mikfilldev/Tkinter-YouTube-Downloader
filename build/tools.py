@@ -70,7 +70,7 @@ def get_maxquality_audio_stream_itag(yt: YouTube) -> int:
 
 
 def get_maxquality_video_stream_itag(yt: YouTube) -> int:
-    video_streams = yt.streams.filter(only_video=True, file_extension="mp4")
+    video_streams = yt.streams.filter(progressive=True, file_extension="mp4")
 
     streams_quality_dict = {}
     for stream in video_streams:

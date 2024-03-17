@@ -42,7 +42,7 @@ def button1_handler():
         download_playlist(playlist, playlist_path, download_audio=download_audio)
 
     else:
-        download_audio(url, DOWNLOAD_PATH)
+        download_audio(url, DOWNLOAD_PATH.joinpath("audio"))
 
 
 def button2_handler():
@@ -53,7 +53,7 @@ def button2_handler():
         download_playlist(playlist, playlist_path, download_video=download_video)
 
     else:
-        download_video(url, DOWNLOAD_PATH)
+        download_video(url, DOWNLOAD_PATH.joinpath("video"))
 
 
 def download_audio(url: str, path: Path):
@@ -65,11 +65,14 @@ def download_audio(url: str, path: Path):
         yt.register_on_complete_callback(on_audio_download_complete(yt.title))
         stream = yt.streams.get_by_itag(get_maxquality_audio_stream_itag(yt))
         canvas.itemconfig(text_id, text="Downloading...")
+        # status
+        canvas.itemconfig(download_status, text=f"Start Downloading {yt.title}")
         print(f'Sound "{yt.title}" start downloading')
         stream.download(path)
     except Exception as e:
         print(e)
     finally:
+        canvas.itemconfig(download_status, text="Audio download successfully")
         print(f'Sound "{yt.title}" download successfully')
 
 
@@ -94,11 +97,14 @@ def download_video(url: str, path: Path):
         yt.register_on_complete_callback(on_video_download_complete(yt.title))
         stream = yt.streams.get_by_itag(get_maxquality_video_stream_itag(yt))
         canvas.itemconfig(text_id, text="Downloading...")
+        # status
+        canvas.itemconfig(download_status, text=f"Start Downloading {yt.title}")
         print(f'Video "{yt.title}" start downloading')
         stream.download(path)
     except Exception as e:
         print(e)
     finally:
+        canvas.itemconfig(download_status, text="Video download successfully")
         print(f'Video "{yt.title}" download successfully')
 
 
@@ -148,13 +154,13 @@ canvas.create_text(
     242.0,
     54.0,
     anchor="nw",
-    text="Download all your videos\n with this tool! Just provide the video url and voalah!",
+    text="Download all your videos\nwith this tool! Just provide the video url and voalah!",
     fill="#000000",
     font=("LexendDeca ExtraLight", 13 * -1),
 )
 
 text_id = canvas.create_text(
-    233.0,
+    236.0,
     143.0,
     anchor="nw",
     text="Video or Playlist URL",
@@ -162,6 +168,16 @@ text_id = canvas.create_text(
     font=("LexendDeca ExtraLight", 16 * -1),
 )
 canvas.itemconfig(text_id, fill="#ff0000")  # Change the color of the text to red
+
+download_status = canvas.create_text(
+    236.0,
+    120.0,
+    anchor="nw",
+    text="Status",
+    fill="#000000",
+    font=("LexendDeca ExtraLight", 16 * -1),
+)
+canvas.itemconfig(download_status, fill="#0000FF")
 
 button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 button_1 = Button(
